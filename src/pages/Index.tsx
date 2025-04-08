@@ -70,23 +70,26 @@ const Index = () => {
 
   const handleSelectTopic = (topic: string) => {
     setInputValue(topic);
-    // Optional: automatically send the selected topic
+    // Automatically send the selected topic
     handleSendMessage(topic);
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       <Header />
       
       <main className="flex-1 container mx-auto py-6 px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-10rem)]">
-          <div className="md:col-span-2">
-            <ChatWindow 
-              messages={messages} 
-              onSendMessage={handleSendMessage}
-              inputValue={inputValue}
-              setInputValue={setInputValue}
-            />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-12rem)]">
+          <div className="md:col-span-2 flex flex-col bg-white rounded-lg shadow-sm border overflow-hidden">
+            <h2 className="p-4 border-b bg-gray-50 font-medium text-gray-700">Chat with TalkEasy</h2>
+            <div className="flex-1">
+              <ChatWindow 
+                messages={messages} 
+                onSendMessage={handleSendMessage}
+                inputValue={inputValue}
+                setInputValue={setInputValue}
+              />
+            </div>
           </div>
           
           <div className="md:col-span-1">
@@ -99,7 +102,7 @@ const Index = () => {
         </div>
       </main>
       
-      <footer className="bg-white p-4 text-center text-gray-500 text-sm">
+      <footer className="bg-white p-4 text-center text-gray-500 text-sm shadow-inner">
         <p>TalkEasy - Never run out of things to say</p>
       </footer>
     </div>
