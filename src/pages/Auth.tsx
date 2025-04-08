@@ -8,10 +8,20 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/Header';
+import { useAuth } from '@/contexts/AuthContext';
+import { v4 as uuidv4 } from 'uuid';
 
 const Auth = () => {
   const navigate = useNavigate();
+  const { login, signup, isAuthenticated } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  
+  // If already authenticated, redirect to home
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
   
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
@@ -30,7 +40,17 @@ const Auth = () => {
     // Simulate login process
     setTimeout(() => {
       setIsLoading(false);
-      // For demo purposes, any login is successful
+      
+      // Create user object from form data
+      const user = {
+        id: uuidv4(),
+        name: loginEmail.split('@')[0], // Just use first part of email as name for demo
+        email: loginEmail
+      };
+      
+      // Store user data using our context
+      login(user);
+      
       toast.success("Login successful!");
       navigate('/');
     }, 1500);
@@ -50,6 +70,17 @@ const Auth = () => {
     // Simulate signup process
     setTimeout(() => {
       setIsLoading(false);
+      
+      // Create user object from form data
+      const user = {
+        id: uuidv4(),
+        name: signupName,
+        email: signupEmail
+      };
+      
+      // Store user data using our context
+      signup(user);
+      
       toast.success("Account created successfully!");
       navigate('/');
     }, 1500);

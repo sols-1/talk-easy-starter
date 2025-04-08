@@ -1,11 +1,11 @@
-
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MessageSquare, ArrowRight, User, Users, Mail, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Carousel,
   CarouselContent,
@@ -13,8 +13,21 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { toast } from 'sonner';
 
 const Home = () => {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  
+  const handleGetStarted = () => {
+    if (isAuthenticated) {
+      navigate('/chat');
+    } else {
+      navigate('/auth');
+      toast.info("Please login or create an account to continue");
+    }
+  };
+
   const features = [
     {
       icon: <MessageSquare className="h-12 w-12 text-chat-primary" />,
@@ -91,16 +104,21 @@ const Home = () => {
               TalkEasy helps you master the art of conversation with AI-powered topics and responses that keep the dialogue flowing.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/auth">
-                <Button size="lg" className="bg-white text-chat-primary hover:bg-gray-100 hover:text-chat-secondary transition-all transform hover:scale-105">
-                  Get Started <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link to="/">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                  Try Demo
-                </Button>
-              </Link>
+              <Button 
+                size="lg" 
+                className="bg-white text-chat-primary hover:bg-gray-100 hover:text-chat-secondary transition-all transform hover:scale-105"
+                onClick={handleGetStarted}
+              >
+                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              
+              {!isAuthenticated && (
+                <Link to="/auth">
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                    Login / Sign Up
+                  </Button>
+                </Link>
+              )}
             </div>
           </motion.div>
           <motion.div 

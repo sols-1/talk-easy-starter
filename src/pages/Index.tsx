@@ -1,12 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from "sonner";
+import { useNavigate } from 'react-router-dom';
 
 import Header from '@/components/Header';
 import ChatWindow from '@/components/ChatWindow';
 import ConversationStarters from '@/components/ConversationStarters';
 import { getRandomTopics, generateResponse } from '@/services/conversationService';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Define the Message interface
 interface Message {
@@ -17,10 +18,20 @@ interface Message {
 }
 
 const Index = () => {
+  const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast.error("Please login to access the chat");
+      navigate('/auth');
+    }
+  }, [isAuthenticated, navigate]);
+  
   const [messages, setMessages] = useState<Message[]>([
     {
       id: uuidv4(),
-      content: "Hello! I'm TalkEasy, your conversation assistant. Need help finding something to talk about? You can select from the suggested topics or tell me what you're interested in!",
+      content: `Hello${user ? ` ${user.name}` : ''}! I'm TalkEasy, your conversation assistant. Need help finding something to talk about? You can select from the suggested topics or tell me what you're interested in!`,
       sender: 'bot',
       timestamp: new Date(),
     },
@@ -73,6 +84,11 @@ const Index = () => {
     // Automatically send the selected topic
     handleSendMessage(topic);
   };
+
+  // If not authenticated, don't render the chat
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
