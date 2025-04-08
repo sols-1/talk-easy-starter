@@ -1,10 +1,13 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { MessageSquare, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+  
   return (
     <header className="bg-gradient-to-r from-chat-primary to-chat-secondary text-white p-4 shadow-md sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
@@ -13,7 +16,15 @@ const Header = () => {
           <h1 className="text-xl font-bold">TalkEasy</h1>
         </Link>
         
-        <div className="flex items-center">
+        <div className="flex items-center space-x-6">
+          {isHomePage && (
+            <nav className="hidden md:flex items-center space-x-6">
+              <a href="#" className="text-white hover:text-white/80 transition-colors">Home</a>
+              <a href="#about" className="text-white hover:text-white/80 transition-colors">About Us</a>
+              <a href="#contact" className="text-white hover:text-white/80 transition-colors">Contact</a>
+            </nav>
+          )}
+          
           <p className="text-sm font-light hidden md:block mr-6">Never run out of things to say</p>
           <Link to="/auth">
             <Button variant="outline" size="sm" className="border-white text-white hover:bg-white hover:text-chat-primary transition-colors">
